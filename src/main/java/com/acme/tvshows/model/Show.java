@@ -10,6 +10,6 @@ public interface Show {
 
 	List<Season> getSeasons() throws ConnectionException, ParseException;
 
-	Season getSeason(int seasonNumber) throws ConnectionException, ParseException;
+	Season getSeason(int seasonNumber) throws ConnectionException, ParseException, MissingElementException;
 
 }

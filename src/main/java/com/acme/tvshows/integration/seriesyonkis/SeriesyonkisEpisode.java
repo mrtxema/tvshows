@@ -2,6 +2,7 @@ package com.acme.tvshows.integration.seriesyonkis;
 
 import com.acme.tvshows.util.BeanFactory;
 import com.acme.tvshows.model.ConnectionException;
+import com.acme.tvshows.model.MissingElementException;
 import com.acme.tvshows.model.ParseException;
 import com.acme.tvshows.model.Episode;
 import com.acme.tvshows.model.Link;
@@ -32,11 +33,28 @@ public class SeriesyonkisEpisode implements Episode {
 		return Integer.parseInt(code.split("x")[1]);
 	}
 
+	public String getTitle() {
+		String title = element.ownText().trim();
+		return (title.charAt(0) == '-') ? title.substring(1).trim() : title;
+	}
+
 	public List<Link> getLinks() throws ConnectionException, ParseException {
 		if (links == null) {
 			buildLinks(element.attr(linkAttr));
 		}
 		return links;
+	}
+
+	public Link getLink(String linkId) throws ConnectionException, ParseException, MissingElementException {
+		if (links == null) {
+			buildLinks(element.attr(linkAttr));
+		}
+		for (Link link : links) {
+			if (link.getId().equals(linkId)) {
+				return link;
+			}
+		}
+		throw new MissingElementException("Can't find link with id " + linkId);
 	}
 
 	private synchronized void buildLinks(String url) throws ConnectionException, ParseException {

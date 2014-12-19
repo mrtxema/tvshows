@@ -4,9 +4,11 @@ import java.net.URL;
 
 public interface Link {
 
-	URL getUrl() throws ConnectionException, ParseException;
+	String getId();
 
 	String getServer();
 
 	Language getLanguage();
+
+	URL getUrl() throws ConnectionException, ParseException;
 }

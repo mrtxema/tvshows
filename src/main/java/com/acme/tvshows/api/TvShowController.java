@@ -50,6 +50,14 @@ public class TvShowController {
 			}
 		}, json());
 
+		get("/tvshows/:store/:show/:season/:episode/:link", (req, res) -> {
+			try {
+				return tvShowService.getLinkUrl(req.params(":store"), req.params(":show"), req.params(":season"), req.params(":episode"), req.params(":link"));
+			} catch (ShowStoreException e) {
+				throw new TvShowException(e);
+			}
+		}, json());
+
 		after((req, res) -> {
 			res.type("application/json");
 		});

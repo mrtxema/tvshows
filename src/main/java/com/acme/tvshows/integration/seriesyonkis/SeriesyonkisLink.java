@@ -34,9 +34,18 @@ public class SeriesyonkisLink implements Link {
 		this.element = element;
 	}
 
+	private String getInitialUrl() {
+		return element.select(urlSelect).first().attr(urlAttr);
+	}
+
+	public String getId() {
+		String initialUrl = getInitialUrl();
+		return initialUrl.substring(initialUrl.lastIndexOf('/') + 1);
+	}
+
 	public URL getUrl() throws ConnectionException, ParseException {
 		if (url == null) {
-			buildRealUrl(element.select(urlSelect).first().attr(urlAttr));
+			buildRealUrl(getInitialUrl());
 		}
 		return url;
 	}

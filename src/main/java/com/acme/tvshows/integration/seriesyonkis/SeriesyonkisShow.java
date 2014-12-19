@@ -2,6 +2,7 @@ package com.acme.tvshows.integration.seriesyonkis;
 
 import com.acme.tvshows.util.BeanFactory;
 import com.acme.tvshows.model.ConnectionException;
+import com.acme.tvshows.model.MissingElementException;
 import com.acme.tvshows.model.ParseException;
 import com.acme.tvshows.model.Season;
 import com.acme.tvshows.model.Show;
@@ -56,11 +57,15 @@ public class SeriesyonkisShow implements Show {
 		return new ArrayList<Season>(seasons.values());
 	}
 
-	public Season getSeason(int seasonNumber) throws ConnectionException, ParseException {
+	public Season getSeason(int seasonNumber) throws ConnectionException, ParseException, MissingElementException {
 		if (seasons == null) {
 			retrieveData();
 		}
-		return seasons.get(seasonNumber);
+		if (seasons.containsKey(seasonNumber)) {
+			return seasons.get(seasonNumber);
+		} else {
+			throw new MissingElementException("Can't find season " + seasonNumber);
+		}
 	}
 
 	private synchronized void retrieveData() throws ConnectionException, ParseException {
