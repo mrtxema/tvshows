@@ -18,6 +18,7 @@ public class TvShowController {
     }
 
 	public TvShowController(final TvShowService tvShowService) {
+		initializePort();
 
 		get(
 			"/tvshows",
