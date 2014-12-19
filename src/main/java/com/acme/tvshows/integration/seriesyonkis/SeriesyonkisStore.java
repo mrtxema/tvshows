@@ -44,13 +44,13 @@ public class SeriesyonkisStore implements Store {
 		return new SeriesyonkisShow(id);
 	}
 
-	class SearchResponse {
+	static class SearchResponse {
 		public boolean estado;
 		public String datos;
 		public List<SearchResult> results;
 	}
 
-	class SearchResult {
+	static class SearchResult {
 		public String name;
 		public String img;
 		public String url;
