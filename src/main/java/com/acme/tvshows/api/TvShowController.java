@@ -10,6 +10,13 @@ import static spark.Spark.*;
 
 public class TvShowController {
 
+	void initializePort() {
+		String port = new ProcessBuilder().environment().get("PORT");
+        if (port != null) {
+            setPort(Integer.parseInt(port));
+        }
+    }
+
 	public TvShowController(final TvShowService tvShowService) {
 
 		get(
