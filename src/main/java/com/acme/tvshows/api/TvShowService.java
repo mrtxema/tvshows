@@ -17,11 +17,11 @@ public class TvShowService {
 	private static final int MINIMUM_SEARCH_LENGTH = 3;
 
 	private Store getStore(String store) throws ShowStoreException {
-		try {
-			return StoreFactory.fromCode(store).newStore();
-		} catch (IllegalArgumentException e) {
-			throw new ShowStoreException("Invalid store name: " + store, e);
+		StoreFactory factory = StoreFactory.fromCode(store);
+		if (factory == null) {
+			throw new ShowStoreException("Invalid store name: " + store);
 		}
+		return factory.newStore();
 	}
 
 	private int parseInt(String s) throws ShowStoreException {

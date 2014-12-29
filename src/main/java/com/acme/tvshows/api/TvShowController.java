@@ -20,11 +20,7 @@ public class TvShowController {
 	public TvShowController(final TvShowService tvShowService) {
 		initializePort();
 
-		get(
-			"/tvshows",
-			(req, res) -> tvShowService.getAllStores(),
-			json()
-		);
+		get("/tvshows", (req, res) -> tvShowService.getAllStores(), json());
 
 		get("/tvshows/:store", (req, res) -> {
 			try {
@@ -67,7 +63,7 @@ public class TvShowController {
 		}, json());
 
 		after((req, res) -> {
-			res.type("application/json");
+			res.type("application/json; charset=utf-8");
 		});
 
 		exception(TvShowException.class, (e, req, res) -> {
