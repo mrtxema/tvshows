@@ -11,6 +11,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 public class ParseHelper {
+	private static final String DEFAULT_REFERRER = "http://www.google.com/";
+	private static final String USER_AGENT = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/37.0.2062.103 Safari/537.36";
 	private static final ParseHelper INSTANCE = new ParseHelper();
 
 	private ParseHelper() {
@@ -20,10 +22,16 @@ public class ParseHelper {
 		return INSTANCE;
 	}
 
+	private Connection connect(String url) {
+		int idx = url.indexOf('/', 8);
+		String baseUrl = (idx == -1) ? DEFAULT_REFERRER : url.substring(0, idx + 1);
+		return Jsoup.connect(url).userAgent(USER_AGENT).referrer(baseUrl);
+	}
+
 	public Document parseUrl(String url) throws ConnectionException, ParseException {
 		Connection.Response response;
 		try {
-			response = Jsoup.connect(url).execute();
+			response = connect(url).execute();
 		} catch (IOException ioe) {
 			throw new ConnectionException(String.format("Can't connect to '%s'", url), ioe);
 		}
@@ -37,7 +45,7 @@ public class ParseHelper {
 	public <T> T parseJson(String url, Map<String,String> parameters, Class<T> clazz) throws ConnectionException, ParseException {
 		String responseJson;
 		try {
-			Connection connection = Jsoup.connect(url).ignoreContentType(true).method(Connection.Method.POST);
+			Connection connection = connect(url).ignoreContentType(true).method(Connection.Method.POST);
 			for (Map.Entry<String,String> entry : parameters.entrySet()) {
 				connection.data(entry.getKey(), entry.getValue());
 			}
