@@ -1,5 +1,8 @@
 package com.acme.tvshows.api;
 
+import com.acme.tvshows.api.filter.BasicShowFilter;
+import com.acme.tvshows.api.filter.TvShowAttributeValue;
+import com.acme.tvshows.api.filter.TvShowFilter;
 import com.acme.tvshows.integration.StoreFactory;
 import com.acme.tvshows.model.Episode;
 import com.acme.tvshows.model.Language;
@@ -8,13 +11,46 @@ import com.acme.tvshows.model.Season;
 import com.acme.tvshows.model.Show;
 import com.acme.tvshows.model.Store;
 import com.acme.tvshows.model.ShowStoreException;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.Map;
+import java.util.HashMap;
 
 public class TvShowService {
 	private static final int MINIMUM_SEARCH_LENGTH = 3;
+	private final Map<Class<?>, List<TvShowFilter<?>>> filters;
+
+	public TvShowService() {
+		filters = retrieveFilters();
+	}
+
+	private Map<Class<?>, List<TvShowFilter<?>>> retrieveFilters() {
+		Map<Class<?>, List<TvShowFilter<?>>> result = new HashMap<Class<?>, List<TvShowFilter<?>>>();
+		result.put(Show.class, Collections.singletonList(
+			new BasicShowFilter(Arrays.asList(new TvShowAttributeValue("id", "big_bang_theory")), Arrays.asList(new TvShowAttributeValue("id", "the-big-bang-theory")))
+		));
+		return result;
+	}
+
+	private <T> List<T> filter(Class<T> clazz, List<T> beans) throws ShowStoreException {
+		if (!filters.containsKey(clazz)) {
+			return beans;
+		}
+		List<T> result = beans;
+		for (TvShowFilter<?> filterItem : filters.get(clazz)) {
+			TvShowFilter<T> filter = (TvShowFilter<T>) filterItem;
+			List<T> filtered = new ArrayList<T>();
+			for (T bean : result) {
+				filtered.addAll(filter.filter(bean));
+			}
+			result = filtered;
+		}
+		return result;
+	}
 
 	private Store getStore(String store) throws ShowStoreException {
 		StoreFactory factory = StoreFactory.fromCode(store);
@@ -44,8 +80,9 @@ public class TvShowService {
 		if (searchString == null || searchString.length() < MINIMUM_SEARCH_LENGTH) {
 			throw new ShowStoreException(String.format("Invalid searchString '%s'. Minimum length is %d", searchString, MINIMUM_SEARCH_LENGTH));
 		}
+		List<Show> shows = getStore(store).findShows(searchString);
 		List<BasicShow> result = new ArrayList<BasicShow>();
-		for (Show show : getStore(store).findShows(searchString)) {
+		for (Show show : filter(Show.class, shows)) {
 			result.add(new BasicShow(show));
 		}
 		return result;
@@ -61,7 +98,8 @@ public class TvShowService {
 
 	public List<BasicEpisode> getSeasonEpisodes(String store, String show, String season) throws ShowStoreException {
 		List<BasicEpisode> result = new ArrayList<BasicEpisode>();
-		for (Episode episode : getStore(store).getShow(show).getSeason(parseInt(season)).getEpisodes()) {
+		List<Episode> episodes = getStore(store).getShow(show).getSeason(parseInt(season)).getEpisodes();
+		for (Episode episode : filter(Episode.class, episodes)) {
 			result.add(new BasicEpisode(episode));
 		}
 		return result;
@@ -69,7 +107,8 @@ public class TvShowService {
 
 	public List<BasicLink> getEpisodeLinks(String store, String show, String season, String episode) throws ShowStoreException {
 		List<BasicLink> result = new ArrayList<BasicLink>();
-		for (Link link : getStore(store).getShow(show).getSeason(parseInt(season)).getEpisode(parseInt(episode)).getLinks()) {
+		List<Link> links = getStore(store).getShow(show).getSeason(parseInt(season)).getEpisode(parseInt(episode)).getLinks();
+		for (Link link : filter(Link.class, links)) {
 			result.add(new BasicLink(link));
 		}
 		return result;
