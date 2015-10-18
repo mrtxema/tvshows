@@ -10,6 +10,7 @@ import java.util.List;
 import org.jsoup.nodes.Element;
 
 public class SeriesyonkisSeason implements Season {
+	private final ParseHelper parseHelper;
 	private final String numberAttr;
 	private final String episodeSelect;
 
@@ -17,7 +18,8 @@ public class SeriesyonkisSeason implements Season {
 	private Map<Integer,Episode> episodes;
 
 
-	public SeriesyonkisSeason(Element element) {
+	public SeriesyonkisSeason(ParseHelper parseHelper, Element element) {
+        this.parseHelper = parseHelper;
 		SeriesyonkisConfiguration config = BeanFactory.getInstance(SeriesyonkisConfiguration.class);
 		this.numberAttr = config.getSeasonNumberAttr();
 		this.episodeSelect = config.getSeasonEpisodeSelect();
@@ -46,7 +48,7 @@ public class SeriesyonkisSeason implements Season {
 		if (episodes == null) {
 			Map<Integer,Episode> episodeMap = new TreeMap<Integer,Episode>();
 			for (Element episodeElement : element.parent().select(episodeSelect)) {
-				Episode episode = new SeriesyonkisEpisode(episodeElement);
+				Episode episode = new SeriesyonkisEpisode(parseHelper, episodeElement);
 				episodeMap.put(episode.getNumber(), episode);
 			}
 			episodes = episodeMap;

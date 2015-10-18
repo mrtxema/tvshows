@@ -1,11 +1,9 @@
-package com.acme.tvshows.api;
+package com.acme.tvshows.api.v1;
 
 import com.acme.tvshows.model.ShowStoreException;
-import java.util.function.Supplier;
-import java.util.concurrent.Callable;
 import com.google.gson.Gson;
 import spark.ResponseTransformer;
-import spark.Route;
+
 import static spark.Spark.*;
 
 public class TvShowController {
@@ -20,9 +18,9 @@ public class TvShowController {
 	public TvShowController(final TvShowService tvShowService) {
 		initializePort();
 
-		get("/tvshows", (req, res) -> tvShowService.getAllStores(), json());
+		get("/tvshows/v1", (req, res) -> tvShowService.getAllStores(), json());
 
-		get("/tvshows/:store", (req, res) -> {
+		get("/tvshows/v1/:store", (req, res) -> {
 			try {
 				return tvShowService.findShows(req.params(":store"), req.queryParams("q"));
 			} catch (ShowStoreException e) {
@@ -30,7 +28,7 @@ public class TvShowController {
 			}
 		}, json());
 
-		get("/tvshows/:store/:show", (req, res) -> {
+		get("/tvshows/v1/:store/:show", (req, res) -> {
 			try {
 				return tvShowService.getShowSeasons(req.params(":store"), req.params(":show"));
 			} catch (ShowStoreException e) {
@@ -38,7 +36,7 @@ public class TvShowController {
 			}
 		}, json());
 
-		get("/tvshows/:store/:show/:season", (req, res) -> {
+		get("/tvshows/v1/:store/:show/:season", (req, res) -> {
 			try {
 				return tvShowService.getSeasonEpisodes(req.params(":store"), req.params(":show"), req.params(":season"));
 			} catch (ShowStoreException e) {
@@ -46,7 +44,7 @@ public class TvShowController {
 			}
 		}, json());
 
-		get("/tvshows/:store/:show/:season/:episode", (req, res) -> {
+		get("/tvshows/v1/:store/:show/:season/:episode", (req, res) -> {
 			try {
 				return tvShowService.getEpisodeLinks(req.params(":store"), req.params(":show"), req.params(":season"), req.params(":episode"));
 			} catch (ShowStoreException e) {
@@ -54,7 +52,7 @@ public class TvShowController {
 			}
 		}, json());
 
-		get("/tvshows/:store/:show/:season/:episode/:link", (req, res) -> {
+		get("/tvshows/v1/:store/:show/:season/:episode/:link", (req, res) -> {
 			try {
 				return tvShowService.getLinkUrl(req.params(":store"), req.params(":show"), req.params(":season"), req.params(":episode"), req.params(":link"));
 			} catch (ShowStoreException e) {

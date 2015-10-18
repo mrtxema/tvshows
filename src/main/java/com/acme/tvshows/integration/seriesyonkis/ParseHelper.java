@@ -5,6 +5,7 @@ import com.acme.tvshows.model.ParseException;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Map;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -13,25 +14,30 @@ import org.jsoup.nodes.Document;
 public class ParseHelper {
 	private static final String DEFAULT_REFERRER = "http://www.google.com/";
 	private static final String USER_AGENT = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/37.0.2062.103 Safari/537.36";
-	private static final ParseHelper INSTANCE = new ParseHelper();
 
-	private ParseHelper() {
-	}
+    private Map<String, String> cookies = Collections.emptyMap();
+    private String lastUrl;
 
-	public static ParseHelper getInstance() {
-		return INSTANCE;
-	}
+    private String getReferrerUrl(String url) {
+        String result = lastUrl;
+        if (result == null) {
+            int idx = url.indexOf('/', 8);
+            result = (idx == -1) ? DEFAULT_REFERRER : url.substring(0, idx + 1);
+        }
+        lastUrl = url;
+        return result;
+    }
 
 	private Connection connect(String url) {
-		int idx = url.indexOf('/', 8);
-		String baseUrl = (idx == -1) ? DEFAULT_REFERRER : url.substring(0, idx + 1);
-		return Jsoup.connect(url).userAgent(USER_AGENT).referrer(baseUrl);
+        System.out.printf("Connecting to url: %s%n", url);
+		return Jsoup.connect(url).userAgent(USER_AGENT).referrer(getReferrerUrl(url)).cookies(cookies);
 	}
 
 	public Document parseUrl(String url) throws ConnectionException, ParseException {
 		Connection.Response response;
 		try {
 			response = connect(url).execute();
+            cookies = response.cookies();
 		} catch (IOException ioe) {
 			throw new ConnectionException(String.format("Can't connect to '%s'", url), ioe);
 		}
@@ -49,7 +55,9 @@ public class ParseHelper {
 			for (Map.Entry<String,String> entry : parameters.entrySet()) {
 				connection.data(entry.getKey(), entry.getValue());
 			}
-			responseJson = connection.execute().body();
+            Connection.Response response = connection.execute();
+            cookies = response.cookies();
+			responseJson = response.body();
 		} catch (IOException ioe) {
 			throw new ConnectionException(String.format("Can't connect to '%s'", url), ioe);
 		}

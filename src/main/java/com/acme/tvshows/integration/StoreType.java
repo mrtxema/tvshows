@@ -3,13 +3,13 @@ package com.acme.tvshows.integration;
 import com.acme.tvshows.model.ShowStoreException;
 import com.acme.tvshows.model.Store;
 
-public enum StoreFactory {
+public enum StoreType {
 	SERIESYONKIS("seriesyonkis", com.acme.tvshows.integration.seriesyonkis.SeriesyonkisStore.class);
 
 	private final String code;
 	private final Class<? extends Store> clazz;
 
-	StoreFactory(String code, Class<? extends Store> clazz) {
+	StoreType(String code, Class<? extends Store> clazz) {
 		this.code = code;
 		this.clazz = clazz;
 	}
@@ -18,16 +18,12 @@ public enum StoreFactory {
 		return code;
 	}
 
-	public Store newStore() throws ShowStoreException {
-		try {
-			return clazz.newInstance();
-		} catch (Exception e) {
-			throw new ShowStoreException(String.format("Can't build %s store instance", name()), e);
-		}
+	public Class<? extends Store> getStoreClass() {
+		return clazz;
 	}
 
-	public static StoreFactory fromCode(String code) {
-		for (StoreFactory factory : values()) {
+	public static StoreType fromCode(String code) {
+		for (StoreType factory : values()) {
 			if (factory.getCode().equals(code)) {
 				return factory;
 			}

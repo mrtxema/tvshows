@@ -14,6 +14,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
 public class SeriesyonkisShow implements Show {
+	private final ParseHelper parseHelper;
 	private final String showUrlPattern;
 	private final String nameSelect;
 	private final String seasonSelect;
@@ -23,21 +24,22 @@ public class SeriesyonkisShow implements Show {
 	private Map<Integer,Season> seasons;
 
 
-	private SeriesyonkisShow() {
+	private SeriesyonkisShow(ParseHelper parseHelper) {
+        this.parseHelper = parseHelper;
 		SeriesyonkisConfiguration config = BeanFactory.getInstance(SeriesyonkisConfiguration.class);
 		showUrlPattern = config.getShowUrlPattern();
 		nameSelect = config.getShowNameSelect();
 		seasonSelect = config.getShowSeasonSelect();
 	}
 
-	SeriesyonkisShow(String id) throws ConnectionException, ParseException {
-		this();
+	SeriesyonkisShow(ParseHelper parseHelper, String id) throws ConnectionException, ParseException {
+		this(parseHelper);
 		this.id = id;
 		retrieveData();
 	}
 
-	SeriesyonkisShow(String id, String name) {
-		this();
+	SeriesyonkisShow(ParseHelper parseHelper, String id, String name) {
+		this(parseHelper);
 		this.id = id;
 		this.name = name;
 	}
@@ -70,11 +72,11 @@ public class SeriesyonkisShow implements Show {
 
 	private synchronized void retrieveData() throws ConnectionException, ParseException {
 		if (this.seasons == null) {
-			Document document = ParseHelper.getInstance().parseUrl(buildUrl(id));
+			Document document = parseHelper.parseUrl(buildUrl(id));
 			this.name = document.select(nameSelect).first().text();
 			Map<Integer,Season> seasonMap = new TreeMap<Integer,Season>();
 			for (Element seasonElement : document.select(seasonSelect)) {
-				Season season = new SeriesyonkisSeason(seasonElement);
+				Season season = new SeriesyonkisSeason(parseHelper, seasonElement);
 				seasonMap.put(season.getNumber(), season);
 			}
 			this.seasons = seasonMap;

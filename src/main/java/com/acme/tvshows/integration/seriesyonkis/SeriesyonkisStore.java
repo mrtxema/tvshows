@@ -5,15 +5,16 @@ import com.acme.tvshows.model.ConnectionException;
 import com.acme.tvshows.model.ParseException;
 import com.acme.tvshows.model.Show;
 import com.acme.tvshows.model.Store;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+
+import java.util.*;
 
 public class SeriesyonkisStore implements Store {
+	private final ParseHelper parseHelper;
 	public final String searchUrl;
 	public final String name;
 
 	public SeriesyonkisStore() {
+        parseHelper = new ParseHelper();
 		SeriesyonkisConfiguration config = BeanFactory.getInstance(SeriesyonkisConfiguration.class);
 		searchUrl = config.getStoreSearchUrl();
 		name = config.getStoreName();
@@ -24,12 +25,12 @@ public class SeriesyonkisStore implements Store {
 	}
 
 	public List<Show> findShows(String showName) throws ConnectionException, ParseException {
-		SearchResponse response = ParseHelper.getInstance().parseJson(searchUrl, Collections.singletonMap("terms", showName), SearchResponse.class);
+		SearchResponse response = parseHelper.parseJson(searchUrl, Collections.singletonMap("terms", showName), SearchResponse.class);
 		List<Show> shows = new ArrayList<Show>();
 		if (response.estado) {
 			for (SearchResult result : response.results) {
 				if ("serie".equals(result.type)) {
-					shows.add(new SeriesyonkisShow(getIdFromUrl(result.url), result.name));
+					shows.add(new SeriesyonkisShow(parseHelper, getIdFromUrl(result.url), result.name));
 				}
 			}
 		}
@@ -41,7 +42,12 @@ public class SeriesyonkisStore implements Store {
 	}
 
 	public Show getShow(String id) throws ConnectionException, ParseException {
-		return new SeriesyonkisShow(id);
+		return new SeriesyonkisShow(parseHelper, id);
+	}
+
+	@Override
+	public String login(Map<String, String> parameters) {
+		return UUID.randomUUID().toString();
 	}
 
 	static class SearchResponse {

@@ -1,4 +1,4 @@
-package com.acme.tvshows.api;
+package com.acme.tvshows.api.v1;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;

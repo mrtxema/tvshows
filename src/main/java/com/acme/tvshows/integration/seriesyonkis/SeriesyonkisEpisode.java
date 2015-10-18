@@ -12,6 +12,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
 public class SeriesyonkisEpisode implements Episode {
+	private final ParseHelper parseHelper;
 	private final String numberSelect;
 	private final String linkAttr;
 	private final String realLinkSelect;
@@ -20,7 +21,8 @@ public class SeriesyonkisEpisode implements Episode {
 	private List<Link> links;
 
 
-	public SeriesyonkisEpisode(Element element) {
+	public SeriesyonkisEpisode(ParseHelper parseHelper, Element element) {
+        this.parseHelper = parseHelper;
 		SeriesyonkisConfiguration config = BeanFactory.getInstance(SeriesyonkisConfiguration.class);
 		this.numberSelect = config.getEpisodeNumberSelect();
 		this.linkAttr = config.getEpisodeLinkAttr();
@@ -59,10 +61,10 @@ public class SeriesyonkisEpisode implements Episode {
 
 	private synchronized void buildLinks(String url) throws ConnectionException, ParseException {
 		if (links == null) {
-			Document document = ParseHelper.getInstance().parseUrl(url);
+			Document document = parseHelper.parseUrl(url);
 			List<Link> linkList = new ArrayList<Link>();
 			for (Element linkElement : document.select(realLinkSelect)) {
-				linkList.add(new SeriesyonkisLink(linkElement));
+				linkList.add(new SeriesyonkisLink(parseHelper, linkElement));
 			}
 			links = linkList;
 		}

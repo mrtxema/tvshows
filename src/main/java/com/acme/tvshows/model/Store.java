@@ -1,6 +1,7 @@
 package com.acme.tvshows.model;
 
 import java.util.List;
+import java.util.Map;
 
 public interface Store {
 
@@ -10,4 +11,5 @@ public interface Store {
 
 	Show getShow(String id) throws ConnectionException, ParseException;
 
+	String login(Map<String, String> parameters);
 }

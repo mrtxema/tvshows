@@ -1,9 +1,9 @@
-package com.acme.tvshows.api;
+package com.acme.tvshows.api.v1;
 
 import com.acme.tvshows.api.filter.BasicShowFilter;
 import com.acme.tvshows.api.filter.TvShowAttributeValue;
 import com.acme.tvshows.api.filter.TvShowFilter;
-import com.acme.tvshows.integration.StoreFactory;
+import com.acme.tvshows.integration.StoreType;
 import com.acme.tvshows.model.Episode;
 import com.acme.tvshows.model.Language;
 import com.acme.tvshows.model.Link;
@@ -52,12 +52,16 @@ public class TvShowService {
 		return result;
 	}
 
-	private Store getStore(String store) throws ShowStoreException {
-		StoreFactory factory = StoreFactory.fromCode(store);
-		if (factory == null) {
-			throw new ShowStoreException("Invalid store name: " + store);
+	public Store getStore(String store) throws ShowStoreException {
+        StoreType type = StoreType.fromCode(store);
+        if (type == null) {
+            throw new ShowStoreException("Invalid store name: " + store);
+        }
+		try {
+			return type.getStoreClass().newInstance();
+		} catch (InstantiationException | IllegalAccessException  e) {
+			throw new ShowStoreException(String.format("Can't build %s store instance", store), e);
 		}
-		return factory.newStore();
 	}
 
 	private int parseInt(String s) throws ShowStoreException {
@@ -70,7 +74,7 @@ public class TvShowService {
 
 	public Set<String> getAllStores() {
 		Set<String> result = new HashSet<String>();
-		for (StoreFactory factory : StoreFactory.values()) {
+		for (StoreType factory : StoreType.values()) {
 			result.add(factory.getCode());
 		}
 		return result;

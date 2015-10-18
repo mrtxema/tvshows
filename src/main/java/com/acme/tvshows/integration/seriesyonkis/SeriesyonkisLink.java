@@ -11,6 +11,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
 public class SeriesyonkisLink implements Link {
+	private final ParseHelper parseHelper;
 	private final String urlSelect;
 	private final String urlAttr;
 	private final String realUrlSelect;
@@ -22,7 +23,8 @@ public class SeriesyonkisLink implements Link {
 	private final Element element;
 	private URL url;
 
-	public SeriesyonkisLink(Element element) {
+	public SeriesyonkisLink(ParseHelper parseHelper, Element element) {
+        this.parseHelper = parseHelper;
 		SeriesyonkisConfiguration config = BeanFactory.getInstance(SeriesyonkisConfiguration.class);
 		this.urlSelect = config.getLinkUrlSelect();
 		this.urlAttr = config.getLinkUrlAttr();
@@ -60,7 +62,7 @@ public class SeriesyonkisLink implements Link {
 
 	private synchronized void buildRealUrl(String initialUrl) throws ConnectionException, ParseException {
 		if (url == null) {
-			Document document = ParseHelper.getInstance().parseUrl(initialUrl);
+			Document document = parseHelper.parseUrl(initialUrl);
 			String urlText = document.select(realUrlSelect).first().attr(realUrlAttr);
 			try {
 				url = new URL(urlText);

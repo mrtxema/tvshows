@@ -1,10 +1,19 @@
 package com.acme.tvshows;
 
-import com.acme.tvshows.api.TvShowController;
-import com.acme.tvshows.api.TvShowService;
+import spark.SparkBase;
 
 public class Main {
-	public static void main(String[] args) {
-		new TvShowController(new TvShowService());
+
+    private static void initializePort() {
+        String port = new ProcessBuilder().environment().get("PORT");
+        if (port != null) {
+            SparkBase.setPort(Integer.parseInt(port));
+        }
+    }
+
+    public static void main(String[] args) {
+        initializePort();
+        new com.acme.tvshows.api.v1.TvShowController(new com.acme.tvshows.api.v1.TvShowService());
+        new com.acme.tvshows.api.v2.TvShowController(new com.acme.tvshows.api.v2.TvShowService());
 	}
 }
