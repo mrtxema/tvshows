@@ -1,18 +1,17 @@
 package com.acme.tvshows.api.v2;
 
+import com.acme.tvshows.model.ShowStoreException;
+
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
 public class ResponseError {
+	private final int code;
+	private final String message;
+	private final String stackTrace;
 
-	private String message;
-	private String stackTrace;
-
-	public ResponseError(String message, String... args) {
-		this.message = String.format(message, args);
-	}
-
-	public ResponseError(Exception e) {
+	public ResponseError(ShowStoreException e) {
+		this.code = e.getErrorType().getCode();
 		this.message = e.getMessage();
 		this.stackTrace = retrieveStackTrace(e);
 	}
@@ -23,6 +22,9 @@ public class ResponseError {
 		return result.toString();
 	}
 
+    public int getCode() {
+        return this.code;
+    }
 	public String getMessage() {
 		return this.message;
 	}

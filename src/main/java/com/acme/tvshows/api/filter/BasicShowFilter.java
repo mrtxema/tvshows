@@ -3,6 +3,8 @@ package com.acme.tvshows.api.filter;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+
+import com.acme.tvshows.model.ErrorType;
 import com.acme.tvshows.model.Show;
 import com.acme.tvshows.model.ShowStoreException;
 
@@ -39,7 +41,7 @@ public class BasicShowFilter implements TvShowFilter<Show> {
 		} else if (attribute.equals("name")) {
 			return bean.getName();
 		} else {
-			throw new ShowStoreException("Unknown attribute: " + attribute);
+			throw new ShowStoreException(ErrorType.INTERNAL_ERROR, "Unknown attribute: " + attribute);
 		}
 	}
 

@@ -50,7 +50,7 @@ public class TvShowService {
 		try {
 			return Integer.parseInt(s);
 		} catch (NumberFormatException e) {
-			throw new ShowStoreException("Invalid number: " + s, e);
+			throw new ShowStoreException(ErrorType.INVALID_ARGUMENT, "Invalid number: " + s, e);
 		}
 	}
 
@@ -62,10 +62,10 @@ public class TvShowService {
 		return result;
 	}
 
-	public Set<String> getAllStoreTypes() {
-		Set<String> result = new HashSet<>();
+	public List<BasicStore> getAllStoreTypes() {
+		List<BasicStore> result = new ArrayList<>();
 		for (StoreType type : StoreType.values()) {
-			result.add(type.getCode());
+			result.add(new BasicStore(type));
 		}
 		return result;
 	}
@@ -76,7 +76,7 @@ public class TvShowService {
 
 	public List<BasicShow> findShows(String storeCode, String token, String searchString) throws ShowStoreException {
 		if (searchString == null || searchString.length() < MINIMUM_SEARCH_LENGTH) {
-			throw new ShowStoreException(String.format("Invalid searchString '%s'. Minimum length is %d", searchString, MINIMUM_SEARCH_LENGTH));
+			throw new ShowStoreException(ErrorType.INVALID_ARGUMENT, String.format("Invalid searchString '%s'. Minimum length is %d", searchString, MINIMUM_SEARCH_LENGTH));
 		}
         Store store = BeanFactory.getInstance(StoreManager.class).getStore(storeCode, token);
 		List<Show> shows = store.findShows(searchString);
@@ -120,6 +120,16 @@ public class TvShowService {
         Store store = BeanFactory.getInstance(StoreManager.class).getStore(storeCode, token);
 		return store.getShow(show).getSeason(parseInt(season)).getEpisode(parseInt(episode)).getLink(link).getUrl().toString();
 	}
+
+	static class BasicStore {
+		final String code;
+        final List<String> loginParameters;
+
+        BasicStore(StoreType storeType) {
+            code = storeType.getCode();
+            loginParameters = storeType.getLoginParameters();
+        }
+    }
 
 	static class BasicShow {
 		final String id;

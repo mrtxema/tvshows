@@ -4,13 +4,8 @@ import com.acme.tvshows.api.filter.BasicShowFilter;
 import com.acme.tvshows.api.filter.TvShowAttributeValue;
 import com.acme.tvshows.api.filter.TvShowFilter;
 import com.acme.tvshows.integration.StoreType;
-import com.acme.tvshows.model.Episode;
-import com.acme.tvshows.model.Language;
-import com.acme.tvshows.model.Link;
-import com.acme.tvshows.model.Season;
-import com.acme.tvshows.model.Show;
-import com.acme.tvshows.model.Store;
-import com.acme.tvshows.model.ShowStoreException;
+import com.acme.tvshows.model.*;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.ArrayList;
@@ -55,12 +50,12 @@ public class TvShowService {
 	public Store getStore(String store) throws ShowStoreException {
         StoreType type = StoreType.fromCode(store);
         if (type == null) {
-            throw new ShowStoreException("Invalid store name: " + store);
+            throw new ShowStoreException(ErrorType.INVALID_ARGUMENT, "Invalid store name: " + store);
         }
 		try {
 			return type.getStoreClass().newInstance();
 		} catch (InstantiationException | IllegalAccessException  e) {
-			throw new ShowStoreException(String.format("Can't build %s store instance", store), e);
+			throw new ShowStoreException(ErrorType.INTERNAL_ERROR, String.format("Can't build %s store instance", store), e);
 		}
 	}
 
@@ -68,7 +63,7 @@ public class TvShowService {
 		try {
 			return Integer.parseInt(s);
 		} catch (NumberFormatException e) {
-			throw new ShowStoreException("Invalid number: " + s, e);
+			throw new ShowStoreException(ErrorType.INVALID_ARGUMENT, "Invalid number: " + s, e);
 		}
 	}
 
@@ -82,7 +77,7 @@ public class TvShowService {
 
 	public List<BasicShow> findShows(String store, String searchString) throws ShowStoreException {
 		if (searchString == null || searchString.length() < MINIMUM_SEARCH_LENGTH) {
-			throw new ShowStoreException(String.format("Invalid searchString '%s'. Minimum length is %d", searchString, MINIMUM_SEARCH_LENGTH));
+			throw new ShowStoreException(ErrorType.INVALID_ARGUMENT, String.format("Invalid searchString '%s'. Minimum length is %d", searchString, MINIMUM_SEARCH_LENGTH));
 		}
 		List<Show> shows = getStore(store).findShows(searchString);
 		List<BasicShow> result = new ArrayList<BasicShow>();

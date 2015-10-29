@@ -66,7 +66,7 @@ public class TvShowController {
 
 		exception(TvShowException.class, (e, req, res) -> {
 			res.status(400);
-			res.body(toJson(new ResponseError(Exception.class.cast(e.getCause()))));
+			res.body(toJson(new ResponseError(ShowStoreException.class.cast(e.getCause()))));
 		});
 	}
 

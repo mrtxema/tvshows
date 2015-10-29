@@ -1,5 +1,7 @@
 package com.acme.tvshows.integration;
 
+import com.acme.tvshows.model.ErrorType;
+import com.acme.tvshows.model.SessionExpirationException;
 import com.acme.tvshows.model.ShowStoreException;
 import com.acme.tvshows.model.Store;
 import com.acme.tvshows.util.LRUCache;
@@ -15,7 +17,7 @@ public class StoreManager {
     private StoreType getStoreType(String store) throws ShowStoreException {
         StoreType factory = StoreType.fromCode(store);
         if (factory == null) {
-            throw new ShowStoreException("Invalid store name: " + store);
+            throw new ShowStoreException(ErrorType.INVALID_ARGUMENT, "Invalid store name: " + store);
         }
         return factory;
     }
@@ -23,7 +25,7 @@ public class StoreManager {
     public Store getStore(String store, String token) throws ShowStoreException {
         Store result = cache.get(token);
         if (result == null) {
-            throw new ShowStoreException(String.format("Token '%s' has expired", token));
+            throw new SessionExpirationException(String.format("Token '%s' has expired", token));
         }
         return result;
     }
@@ -33,7 +35,7 @@ public class StoreManager {
         try {
             storeInstance = getStoreType(store).getStoreClass().newInstance();
         } catch (InstantiationException | IllegalAccessException  e) {
-            throw new ShowStoreException(String.format("Can't build %s store instance", store), e);
+            throw new ShowStoreException(ErrorType.INTERNAL_ERROR, String.format("Can't build %s store instance", store), e);
         }
         String token = storeInstance.login(loginParameters);
         cache.put(token, new CachedStore(storeInstance));
