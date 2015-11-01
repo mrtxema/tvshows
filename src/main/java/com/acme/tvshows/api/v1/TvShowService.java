@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.HashMap;
 
 public class TvShowService {
+	private static final int API_VERSION = 1;
 	private static final int MINIMUM_SEARCH_LENGTH = 3;
 	private final Map<Class<?>, List<TvShowFilter<?>>> filters;
 
@@ -69,7 +70,7 @@ public class TvShowService {
 
 	public Set<String> getAllStores() {
 		Set<String> result = new HashSet<String>();
-		for (StoreType factory : StoreType.values()) {
+		for (StoreType factory : StoreType.getValues(API_VERSION)) {
 			result.add(factory.getCode());
 		}
 		return result;

@@ -1,5 +1,6 @@
 package com.acme.tvshows.integration.seriesyonkis;
 
+import com.acme.tvshows.integration.ParseHelper;
 import com.acme.tvshows.util.BeanFactory;
 import com.acme.tvshows.model.ConnectionException;
 import com.acme.tvshows.model.ParseException;

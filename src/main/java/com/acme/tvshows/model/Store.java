@@ -11,5 +11,5 @@ public interface Store {
 
 	Show getShow(String id) throws ConnectionException, ParseException;
 
-	String login(Map<String, String> parameters);
+	boolean login(Map<String, String> parameters) throws ConnectionException;
 }

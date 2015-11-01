@@ -35,7 +35,7 @@ public class CachedStore implements Store {
     }
 
     @Override
-    public String login(Map<String, String> parameters) {
+    public boolean login(Map<String, String> parameters) throws ConnectionException {
         return store.login(parameters);
     }
 }

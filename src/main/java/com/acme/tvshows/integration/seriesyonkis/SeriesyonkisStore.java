@@ -1,5 +1,6 @@
 package com.acme.tvshows.integration.seriesyonkis;
 
+import com.acme.tvshows.integration.ParseHelper;
 import com.acme.tvshows.util.BeanFactory;
 import com.acme.tvshows.model.ConnectionException;
 import com.acme.tvshows.model.ParseException;
@@ -10,8 +11,8 @@ import java.util.*;
 
 public class SeriesyonkisStore implements Store {
 	private final ParseHelper parseHelper;
-	public final String searchUrl;
-	public final String name;
+	private final String searchUrl;
+	private final String name;
 
 	public SeriesyonkisStore() {
         parseHelper = new ParseHelper();
@@ -46,8 +47,8 @@ public class SeriesyonkisStore implements Store {
 	}
 
 	@Override
-	public String login(Map<String, String> parameters) {
-		return UUID.randomUUID().toString();
+	public boolean login(Map<String, String> parameters) {
+		return true;
 	}
 
 	static class SearchResponse {

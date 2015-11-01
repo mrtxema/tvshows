@@ -8,6 +8,7 @@ import com.acme.tvshows.util.LRUCache;
 import com.acme.tvshows.util.Singleton;
 
 import java.util.Map;
+import java.util.UUID;
 
 @Singleton
 public class StoreManager {
@@ -37,8 +38,12 @@ public class StoreManager {
         } catch (InstantiationException | IllegalAccessException  e) {
             throw new ShowStoreException(ErrorType.INTERNAL_ERROR, String.format("Can't build %s store instance", store), e);
         }
-        String token = storeInstance.login(loginParameters);
-        cache.put(token, new CachedStore(storeInstance));
-        return token;
+        if (storeInstance.login(loginParameters)) {
+            final String token = UUID.randomUUID().toString();
+            cache.put(token, new CachedStore(storeInstance));
+            return token;
+        } else {
+            throw new ShowStoreException(ErrorType.WRONG_CREDENTIALS, "Invalid login credentials");
+        }
     }
 }

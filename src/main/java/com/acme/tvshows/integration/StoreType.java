@@ -1,20 +1,24 @@
 package com.acme.tvshows.integration;
 
+import com.acme.tvshows.integration.pordede.PordedeStore;
 import com.acme.tvshows.integration.seriesyonkis.SeriesyonkisStore;
 import com.acme.tvshows.model.Store;
-import java.util.Collections;
-import java.util.List;
+
+import java.util.*;
 
 public enum StoreType {
-	SERIESYONKIS("seriesyonkis", SeriesyonkisStore.class, Collections.<String>emptyList());
+	SERIESYONKIS("seriesyonkis", SeriesyonkisStore.class, 1, Collections.<String>emptyList()),
+    PORDEDE("pordede", PordedeStore.class, 2, Arrays.asList("username", "password"));
 
 	private final String code;
 	private final Class<? extends Store> clazz;
+	private final int fromVersion;
 	private final List<String> loginParameters;
 
-	StoreType(String code, Class<? extends Store> clazz, List<String> loginParameters) {
+	StoreType(String code, Class<? extends Store> clazz, int fromVersion, List<String> loginParameters) {
 		this.code = code;
 		this.clazz = clazz;
+        this.fromVersion = fromVersion;
 		this.loginParameters = loginParameters;
 	}
 
@@ -38,4 +42,14 @@ public enum StoreType {
 		}
 		return null;
 	}
+
+    public static Set<StoreType> getValues(int version) {
+        Set<StoreType> result = EnumSet.noneOf(StoreType.class);
+        for (StoreType storeType : values()) {
+            if (version >= storeType.fromVersion) {
+                result.add(storeType);
+            }
+        }
+        return result;
+    }
 }

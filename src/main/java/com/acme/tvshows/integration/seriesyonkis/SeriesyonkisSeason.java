@@ -1,5 +1,6 @@
 package com.acme.tvshows.integration.seriesyonkis;
 
+import com.acme.tvshows.integration.ParseHelper;
 import com.acme.tvshows.util.BeanFactory;
 import com.acme.tvshows.model.Episode;
 import com.acme.tvshows.model.Season;
