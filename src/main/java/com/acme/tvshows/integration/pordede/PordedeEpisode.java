@@ -6,10 +6,7 @@ import com.acme.tvshows.util.BeanFactory;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class PordedeEpisode implements Episode {
     private final ParseHelper parseHelper;
@@ -60,7 +57,7 @@ public class PordedeEpisode implements Episode {
         if (links == null) {
             PordedeConfiguration config = BeanFactory.getInstance(PordedeConfiguration.class);
             Document document = parseHelper.parseUrl(episodeUrl);
-            Map<String, Link> linkMap = new HashMap<>();
+            Map<String, Link> linkMap = new LinkedHashMap<>();
             for (Element linkElement : document.select(config.getEpisodeRealLinkSelect())) {
                 Link link = new PordedeLink(parseHelper, linkElement);
                 linkMap.put(link.getId(), link);
