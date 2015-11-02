@@ -22,7 +22,6 @@ public class PordedeShow implements Show {
         this.parseHelper = parseHelper;
         PordedeConfiguration config = BeanFactory.getInstance(PordedeConfiguration.class);
         showUrlPattern = config.getShowUrlPattern();
-        // Esto puede ser que sea otra expresion para la pagina de show (ahora es para la de busqueda)
         nameSelect = config.getShowNameSelect();
         seasonSelect = config.getShowSeasonSelect();
     }
@@ -30,8 +29,8 @@ public class PordedeShow implements Show {
     public PordedeShow(ParseHelper parseHelper, Element showElement) {
         this(parseHelper);
         PordedeConfiguration config = BeanFactory.getInstance(PordedeConfiguration.class);
-        this.id = getLastPathComponent(showElement.attr(config.getShowIdAttr()));
-        this.name = showElement.select(config.getShowNameSelect()).first().attr(config.getShowNameAttr());
+        this.id = getLastPathComponent(showElement.attr(config.getShowSearchIdAttr()));
+        this.name = showElement.select(config.getShowSearchNameSelect()).first().attr(config.getShowSearchNameAttr());
     }
 
     public PordedeShow(ParseHelper parseHelper, String id) throws ConnectionException, ParseException {
@@ -60,7 +59,7 @@ public class PordedeShow implements Show {
         if (seasons == null) {
             retrieveData();
         }
-        return new ArrayList<Season>(seasons.values());
+        return new ArrayList<>(seasons.values());
     }
 
     @Override
@@ -78,7 +77,7 @@ public class PordedeShow implements Show {
     private synchronized void retrieveData() throws ConnectionException, ParseException {
         if (this.seasons == null) {
             Document document = parseHelper.parseUrl(buildUrl(id));
-            this.name = document.select(nameSelect).first().text();
+            this.name = document.select(nameSelect).first().ownText();
             Map<Integer,Season> seasonMap = new TreeMap<Integer,Season>();
             for (Element seasonElement : document.select(seasonSelect)) {
                 Season season = new PordedeSeason(parseHelper, seasonElement);

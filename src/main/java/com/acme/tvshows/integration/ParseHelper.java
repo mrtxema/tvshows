@@ -15,6 +15,7 @@ import org.jsoup.nodes.Document;
 public class ParseHelper {
 	private static final String DEFAULT_REFERRER = "http://www.google.com/";
 	private static final String USER_AGENT = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/37.0.2062.103 Safari/537.36";
+    private static final String LOCATION_HEADER = "Location";
 
     private Map<String, String> cookies = new HashMap<>();
     private String lastUrl;
@@ -90,6 +91,16 @@ public class ParseHelper {
             return new Gson().fromJson(responseJson, clazz);
         } catch (JsonSyntaxException e) {
             throw new ParseException(String.format("Can't parse json at '%s'", url), e);
+        }
+    }
+
+    public String getRedirectUrl(String url) throws ConnectionException {
+        try {
+            Connection.Response response = connect(url).followRedirects(false).execute();
+            cookies.putAll(response.cookies());
+            return response.header(LOCATION_HEADER);
+        } catch (IOException ioe) {
+            throw new ConnectionException(String.format("Can't connect to '%s'", url), ioe);
         }
     }
 }

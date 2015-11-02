@@ -8,6 +8,6 @@ public interface Season {
 
 	List<Episode> getEpisodes() throws ConnectionException, ParseException;
 
-	Episode getEpisode(int episodeNumber) throws ConnectionException, ParseException;
+	Episode getEpisode(int episodeNumber) throws ConnectionException, ParseException, MissingElementException;
 
 }

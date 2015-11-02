@@ -13,16 +13,16 @@ public class PordedeConfiguration {
     private String storeShowSelect;
     private String storeName;
     private String showUrlPattern;
-    private String showIdAttr;
+    private String showSearchIdAttr;
+    private String showSearchNameSelect;
+    private String showSearchNameAttr;
     private String showNameSelect;
-    private String showNameAttr;
     private String showSeasonSelect;
     private String seasonNumberAttr;
     private String seasonEpisodeSelect;
     private String episodeNumberSelect;
     private String episodeLinkAttr;
     private String episodeRealLinkSelect;
-    private String linkUrlSelect;
     private String linkUrlAttr;
     private String linkRealUrlSelect;
     private String linkRealUrlAttr;
@@ -30,6 +30,8 @@ public class PordedeConfiguration {
     private String linkServerAttr;
     private String linkLanguageSelect;
     private String languageCodeAttr;
+    private String seasonNumberSelect;
+    private String linkServerRegex;
 
     public String getStoreLoginUrl() {
         return storeLoginUrl;
@@ -87,12 +89,28 @@ public class PordedeConfiguration {
         this.showUrlPattern = showUrlPattern;
     }
 
-    public String getShowIdAttr() {
-        return showIdAttr;
+    public String getShowSearchIdAttr() {
+        return showSearchIdAttr;
     }
 
-    public void setShowIdAttr(String showIdAttr) {
-        this.showIdAttr = showIdAttr;
+    public void setShowSearchIdAttr(String showSearchIdAttr) {
+        this.showSearchIdAttr = showSearchIdAttr;
+    }
+
+    public String getShowSearchNameSelect() {
+        return showSearchNameSelect;
+    }
+
+    public void setShowSearchNameSelect(String showSearchNameSelect) {
+        this.showSearchNameSelect = showSearchNameSelect;
+    }
+
+    public String getShowSearchNameAttr() {
+        return showSearchNameAttr;
+    }
+
+    public void setShowSearchNameAttr(String showSearchNameAttr) {
+        this.showSearchNameAttr = showSearchNameAttr;
     }
 
     public String getShowNameSelect() {
@@ -103,20 +121,20 @@ public class PordedeConfiguration {
         this.showNameSelect = showNameSelect;
     }
 
-    public String getShowNameAttr() {
-        return showNameAttr;
-    }
-
-    public void setShowNameAttr(String showNameAttr) {
-        this.showNameAttr = showNameAttr;
-    }
-
     public String getShowSeasonSelect() {
         return showSeasonSelect;
     }
 
     public void setShowSeasonSelect(String showSeasonSelect) {
         this.showSeasonSelect = showSeasonSelect;
+    }
+
+    public String getSeasonNumberSelect() {
+        return seasonNumberSelect;
+    }
+
+    public void setSeasonNumberSelect(String seasonNumberSelect) {
+        this.seasonNumberSelect = seasonNumberSelect;
     }
 
     public String getSeasonNumberAttr() {
@@ -159,14 +177,6 @@ public class PordedeConfiguration {
         this.episodeRealLinkSelect = episodeRealLinkSelect;
     }
 
-    public String getLinkUrlSelect() {
-        return linkUrlSelect;
-    }
-
-    public void setLinkUrlSelect(String linkUrlSelect) {
-        this.linkUrlSelect = linkUrlSelect;
-    }
-
     public String getLinkUrlAttr() {
         return linkUrlAttr;
     }
@@ -205,6 +215,14 @@ public class PordedeConfiguration {
 
     public void setLinkServerAttr(String linkServerAttr) {
         this.linkServerAttr = linkServerAttr;
+    }
+
+    public String getLinkServerRegex() {
+        return linkServerRegex;
+    }
+
+    public void setLinkServerRegex(String linkServerRegex) {
+        this.linkServerRegex = linkServerRegex;
     }
 
     public String getLinkLanguageSelect() {
