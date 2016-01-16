@@ -13,6 +13,7 @@ public class Main {
 
     public static void main(String[] args) {
         initializePort();
-        new com.acme.tvshows.api.v2.TvShowController(new com.acme.tvshows.api.v2.TvShowService());
+        new com.acme.tvshows.tv.api.v2.TvShowController(new com.acme.tvshows.tv.api.v2.TvShowService());
+        new com.acme.tvshows.movies.api.v1.MovieController(new com.acme.tvshows.movies.api.v1.MovieService());
 	}
 }
