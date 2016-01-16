@@ -9,5 +9,9 @@ public interface MovieLink {
 
     Language getLanguage();
 
+    String getVideoQuality();
+
+    String getAudioQuality();
+
     URL getUrl() throws MovieStoreException;
 }

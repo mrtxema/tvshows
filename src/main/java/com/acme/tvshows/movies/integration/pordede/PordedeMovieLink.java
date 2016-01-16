@@ -21,6 +21,8 @@ public class PordedeMovieLink implements MovieLink {
     private final String initialUrl;
     private final String server;
     private final Language language;
+    private final String videoQuality;
+    private final String audioQuality;
     private URL url;
 
     public PordedeMovieLink(ParseHelper parseHelper, Element linkElement) {
@@ -31,6 +33,8 @@ public class PordedeMovieLink implements MovieLink {
                 linkElement.select(config.getLinkServerSelect()).first().attr(config.getLinkServerAttr()),
                 config.getLinkServerRegex());
         this.language = new PordedeMovieLanguage(linkElement.select(config.getLinkLanguageSelect()));
+        this.videoQuality = linkElement.select(config.getLinkVideoQualitySelect()).first().ownText().trim();
+        this.audioQuality = linkElement.select(config.getLinkAudioQualitySelect()).first().ownText().trim();
     }
 
     private String extractServerName(String rawServer, String regex) {
@@ -51,6 +55,16 @@ public class PordedeMovieLink implements MovieLink {
     @Override
     public Language getLanguage() {
         return language;
+    }
+
+    @Override
+    public String getVideoQuality() {
+        return videoQuality;
+    }
+
+    @Override
+    public String getAudioQuality() {
+        return audioQuality;
     }
 
     @Override

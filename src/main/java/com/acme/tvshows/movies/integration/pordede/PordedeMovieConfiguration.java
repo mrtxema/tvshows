@@ -26,6 +26,8 @@ public class PordedeMovieConfiguration {
     private String linkLanguageSelect;
     private String languageCodeAttr;
     private String linkServerRegex;
+    private String linkVideoQualitySelect;
+    private String linkAudioQualitySelect;
 
     public String getStoreLoginUrl() {
         return storeLoginUrl;
@@ -185,5 +187,21 @@ public class PordedeMovieConfiguration {
 
     public void setLanguageCodeAttr(String languageCodeAttr) {
         this.languageCodeAttr = languageCodeAttr;
+    }
+
+    public String getLinkVideoQualitySelect() {
+        return linkVideoQualitySelect;
+    }
+
+    public void setLinkVideoQualitySelect(String linkVideoQualitySelect) {
+        this.linkVideoQualitySelect = linkVideoQualitySelect;
+    }
+
+    public String getLinkAudioQualitySelect() {
+        return linkAudioQualitySelect;
+    }
+
+    public void setLinkAudioQualitySelect(String linkAudioQualitySelect) {
+        this.linkAudioQualitySelect = linkAudioQualitySelect;
     }
 }
