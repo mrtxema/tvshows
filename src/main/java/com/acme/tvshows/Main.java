@@ -15,5 +15,6 @@ public class Main {
         initializePort();
         new com.acme.tvshows.tv.api.v2.TvShowController(new com.acme.tvshows.tv.api.v2.TvShowService());
         new com.acme.tvshows.movies.api.v1.MovieController(new com.acme.tvshows.movies.api.v1.MovieService());
+        new com.acme.tvshows.video.api.v1.VideoController(new com.acme.tvshows.video.api.v1.VideoService());
 	}
 }
