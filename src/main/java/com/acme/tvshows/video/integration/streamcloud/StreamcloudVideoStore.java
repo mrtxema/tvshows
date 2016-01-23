@@ -25,6 +25,7 @@ public class StreamcloudVideoStore implements VideoStore {
     private final int numRetries;
     private final String scriptSelect;
     private final Pattern linkPattern;
+    private final String proxyBaseUrl;
 
     public StreamcloudVideoStore() {
         parseHelper = new ParseHelper();
@@ -35,6 +36,7 @@ public class StreamcloudVideoStore implements VideoStore {
         numRetries = config.getNumRetries();
         scriptSelect = config.getScriptSelect();
         linkPattern = Pattern.compile(config.getLinkPattern());
+        proxyBaseUrl = config.getProxyBaseUrl();
     }
 
     @Override
@@ -45,9 +47,15 @@ public class StreamcloudVideoStore implements VideoStore {
     @Override
     public String getVideoUrl(String link) throws VideoLinkException {
         try {
-            String[] pathComponents = new URL(link).getPath().split("/");
-            String fname = pathComponents[2].substring(0, pathComponents[2].lastIndexOf('.'));
-            return retrieveVideoLink(link, buildParameters(String.format(postDataPattern, pathComponents[1], fname)));
+            String path = new URL(link).getPath();
+            String proxyLink = proxyBaseUrl + path;
+            String[] pathComponents = path.split("/");
+            int idx = pathComponents[2].lastIndexOf('.');
+            if (idx == -1) {
+                throw new VideoLinkException(ErrorType.INVALID_ARGUMENT, "Unknown URL format");
+            }
+            String fname = pathComponents[2].substring(0, idx);
+            return retrieveVideoLink(proxyLink, buildParameters(String.format(postDataPattern, pathComponents[1], fname)));
         } catch (MalformedURLException e) {
             throw new VideoLinkException(ErrorType.INVALID_ARGUMENT, e.getMessage(), e);
         } catch (ConnectionException e) {

@@ -12,6 +12,7 @@ public class StreamcloudConfiguration {
     private int numRetries;
     private String scriptSelect;
     private String linkPattern;
+    private String proxyBaseUrl;
 
     public String getPostDataPattern() {
         return postDataPattern;
@@ -59,5 +60,13 @@ public class StreamcloudConfiguration {
 
     public void setLinkPattern(String linkPattern) {
         this.linkPattern = linkPattern;
+    }
+
+    public String getProxyBaseUrl() {
+        return proxyBaseUrl;
+    }
+
+    public void setProxyBaseUrl(String proxyBaseUrl) {
+        this.proxyBaseUrl = proxyBaseUrl;
     }
 }
