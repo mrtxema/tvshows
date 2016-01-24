@@ -71,23 +71,8 @@ public class ParseHelper {
 		}
 	}
 
-    public Document parsePostUrl(String url, Map<String,String> parameters) throws ConnectionException, ParseException {
-        Connection.Response response;
-        try {
-            Connection connection = connect(url).ignoreContentType(true).method(Connection.Method.POST);
-            for (Map.Entry<String,String> entry : parameters.entrySet()) {
-                connection.data(entry.getKey(), entry.getValue());
-            }
-            response = connection.execute();
-            cookies.putAll(response.cookies());
-        } catch (IOException ioe) {
-            throw new ConnectionException(String.format("Can't connect to '%s'", url), ioe);
-        }
-        try {
-            return response.parse();
-        } catch (IOException ioe) {
-            throw new ParseException(String.format("Can't parse html at '%s'", url), ioe);
-        }
+    public Document parseHtml(String html, String baseUri) {
+        return Jsoup.parse(html, baseUri);
     }
 
     public <T> T parseJson(String url, Map<String,String> parameters, Class<T> clazz) throws ConnectionException, ParseException {

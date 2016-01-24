@@ -7,20 +7,9 @@ import com.acme.tvshows.util.Singleton;
 @Configured
 public class StreamcloudConfiguration {
     private String storeName;
-    private String postDataPattern;
     private long waitTimeMillis;
-    private int numRetries;
     private String scriptSelect;
     private String linkPattern;
-    private String proxyBaseUrl;
-
-    public String getPostDataPattern() {
-        return postDataPattern;
-    }
-
-    public void setPostDataPattern(String postDataPattern) {
-        this.postDataPattern = postDataPattern;
-    }
 
     public String getStoreName() {
         return storeName;
@@ -38,14 +27,6 @@ public class StreamcloudConfiguration {
         this.waitTimeMillis = waitTimeMillis;
     }
 
-    public int getNumRetries() {
-        return numRetries;
-    }
-
-    public void setNumRetries(int numRetries) {
-        this.numRetries = numRetries;
-    }
-
     public String getScriptSelect() {
         return scriptSelect;
     }
@@ -60,13 +41,5 @@ public class StreamcloudConfiguration {
 
     public void setLinkPattern(String linkPattern) {
         this.linkPattern = linkPattern;
-    }
-
-    public String getProxyBaseUrl() {
-        return proxyBaseUrl;
-    }
-
-    public void setProxyBaseUrl(String proxyBaseUrl) {
-        this.proxyBaseUrl = proxyBaseUrl;
     }
 }

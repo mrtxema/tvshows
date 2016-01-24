@@ -3,6 +3,7 @@ package com.acme.tvshows.movies.api.v1;
 import com.acme.tvshows.movies.api.v1.model.*;
 import com.acme.tvshows.movies.integration.MovieStoreManager;
 import com.acme.tvshows.movies.integration.MovieStoreType;
+import com.acme.tvshows.movies.integration.NavigationService;
 import com.acme.tvshows.movies.model.ErrorType;
 import com.acme.tvshows.movies.model.MovieStoreException;
 import com.acme.tvshows.util.BeanFactory;
@@ -60,8 +61,10 @@ public class MovieService {
         return new MovieDetails(result);
     }
 
-    public VideoUrl getLinkUrl(String storeCode, String token, String movie, String link) throws MovieStoreException {
+    public VideoUrl getLinkUrl(String storeCode, String token, String movie, String linkId) throws MovieStoreException {
         com.acme.tvshows.movies.model.MovieStore store = BeanFactory.getInstance(MovieStoreManager.class).getStore(storeCode, token);
-        return new VideoUrl(store.getMovie(movie).getLink(link).getUrl().toString());
+        com.acme.tvshows.movies.model.MovieLink link = store.getMovie(movie).getLink(linkId);
+        NavigationService navigationService = BeanFactory.getInstance(NavigationService.class);
+        return new VideoUrl(link.getUrl().toString(), navigationService.getNavigationAction(link));
     }
 }

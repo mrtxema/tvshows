@@ -11,6 +11,7 @@ import java.net.URL;
 
 @Singleton
 public class VideoStoreManager {
+    private final static String STREAMCLOUD_HOST = "streamcloud.eu";
 
     public VideoStore newStore(String link) throws VideoLinkException {
         try {
@@ -21,7 +22,7 @@ public class VideoStoreManager {
     }
 
     private VideoStore newStoreFromHost(String host) throws VideoLinkException {
-        if (host.endsWith("streamcloud.eu")) {
+        if (host.endsWith(STREAMCLOUD_HOST)) {
             return new StreamcloudVideoStore();
         }
         throw new VideoLinkException(ErrorType.INVALID_ARGUMENT, "Server not supported: " + host);
