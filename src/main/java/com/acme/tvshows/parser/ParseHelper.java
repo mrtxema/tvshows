@@ -29,7 +29,7 @@ public class ParseHelper {
 
 	private Connection connect(String url) {
         //System.out.printf("Connecting to url: %s%n", url);
-		return Jsoup.connect(url).userAgent(USER_AGENT).referrer(getReferrerUrl(url)).cookies(cookies);
+		return Jsoup.connect(url).timeout(120000).userAgent(USER_AGENT).referrer(getReferrerUrl(url)).cookies(cookies);
 	}
 
     public int getResponseCode(String url) throws ConnectionException {
